@@ -1,0 +1,8 @@
+Image Upload Plugin 
+===================
+
+Image Plugin for CakePHP. 
+
+One more option for dealing with image uploads in CakePHP in a simple way.
+
+Work in progress. Should be ready for production development soon enough.
