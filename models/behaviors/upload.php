@@ -7,7 +7,7 @@
  *  no thumb will be generated.
  *
  *   var $actsAs = array(
- *       'ImagemUpload.Upload' => array(
+ *       'ImageUpload.Upload' => array(
  *            'field_name' => array(
  *               'w','h','Tw','Th'
  *            )
