@@ -20,6 +20,10 @@
 class UploadBehavior extends ModelBehavior {
 
 /*
+ * Default image dimensions 
+ */
+    var $param = 300;
+/*
  * The dir name where pics get uploaded 
  */
     var $dir = null;
@@ -56,10 +60,14 @@ class UploadBehavior extends ModelBehavior {
                 $handle->file_new_name_body = $filename; 
                 $handle->image_resize = true;
                 $handle->image_ratio_crop = true;
-                $handle->image_x = $this->settings[$model->alias][$field][0];
-                $handle->image_y = $this->settings[$model->alias][$field][1];
+
+                $image_width = $this->settings[$model->alias][$field][0];
+                $image_height = $this->settings[$model->alias][$field][1];
                 
-                echo $this->settings[$model->alias]['path_to_dir']; 
+                $handle->image_x = $this->checkIntParam($image_width);
+                $handle->image_y = $this->checkInTParam($image_height);
+                
+                $this->settings[$model->alias]['path_to_dir']; 
                 $handle->process($this->settings[$model->alias]['path_to_dir']);
                 if($handle->processed){
                     $model->data[$model->alias][$field] = $filename.'.'.$handle->file_dst_name_ext;
@@ -78,8 +86,12 @@ class UploadBehavior extends ModelBehavior {
                     $handle->file_new_name_body = $filename_thumb; 
                     $handle->image_resize = true;
                     $handle->image_ratio_crop = true;
-                    $handle->image_y = $this->settings[$model->alias][$field][2]; 
-                    $handle->image_x = $this->settings[$model->alias][$field][3];
+
+                    $thumb_width = $this->settings[$model->alias][$field][2];
+                    $thumb_height = $this->settings[$model->alias][$field][3];
+                    
+                    $handle->image_x = $this->checkIntParam($thumb_width);
+                    $handle->image_y = $this->checkInTParam($thumb_height);
                     
                     $handle->process($this->settings[$model->alias]['path_to_dir']);
                     $upThumbImg = $handle->processed;
@@ -127,5 +139,16 @@ class UploadBehavior extends ModelBehavior {
         }
         return true;
     }    
-     
+
+/*
+ * Checks if user added numeric parameter correctly. If not it returns a 
+ * default config dimension. 
+ *
+ */ 
+    function checkIntParam($param){
+        if(!is_numeric($param)){
+            return $this->param;
+        }
+        return $param;
+    }       
 }
