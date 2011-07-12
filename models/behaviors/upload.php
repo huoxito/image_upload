@@ -32,6 +32,7 @@ class UploadBehavior extends ModelBehavior {
         
         $this->dir = Inflector::tableize($model->name);
         $this->fields_array = $settings; 
+
         $this->settings[$model->name] = array_merge(
             array('path_to_dir' => WWW_ROOT . 'files/' . $this->dir),
             $this->fields_array
@@ -48,7 +49,7 @@ class UploadBehavior extends ModelBehavior {
     }
      
     function beforeSave(&$model){
-       
+
         App::Import('Lib', 'ImageUpload.Upload');
         foreach($this->fields_array as $field => $configs){
 
@@ -80,28 +81,32 @@ class UploadBehavior extends ModelBehavior {
                     $this->delete($model);
                 }
 
-                if($this->settings[$model->alias][$field][3]){
+                $params_number = count($this->settings[$model->alias][$field]);
+                $thumbs = (int)($params_number - 2) / 2;
+                $n = 0;
+                for($i=0; $i<$thumbs; $i++){
                     
-                    $filename_thumb = 'thb_'.$filename;
+                    $filename_thumb = 'thb'.$i.'_'.$filename;
                     $handle->file_new_name_body = $filename_thumb; 
                     $handle->image_resize = true;
                     $handle->image_ratio_crop = true;
 
-                    $thumb_width = $this->settings[$model->alias][$field][2];
-                    $thumb_height = $this->settings[$model->alias][$field][3];
+                    $thumb_width = $this->settings[$model->alias][$field][2+$n];
+                    $thumb_height = $this->settings[$model->alias][$field][3+$n];
                     
                     $handle->image_x = $this->checkIntParam($thumb_width);
                     $handle->image_y = $this->checkInTParam($thumb_height);
                     
                     $handle->process($this->settings[$model->alias]['path_to_dir']);
                     $upThumbImg = $handle->processed;
-                    if($handle->processed){
-                        $handle->Clean();
-                    }else{
+                    if(!$handle->processed){
                         echo $handle->error;
                         return false;
                     }
+                    $n += 2;
                 }                
+
+                $handle->Clean();
 
             }else{
                 unset($model->data[$model->alias][$field]);
@@ -127,11 +132,15 @@ class UploadBehavior extends ModelBehavior {
         foreach($this->fields_array as $field => $configs){
             $filename = $model->field($field); 
             if(!empty($filename)){
+
                 if(!unlink($path_to_dir.'/'.$filename)){
                     return false;
                 }
-                if($field[2]){
-                    if(!unlink($path_to_dir.'/thb_'.$filename)){
+
+                $params_number = count($this->settings[$model->alias][$field]);
+                $thumbs = (int)($params_number - 2) / 2;
+                for($i=0; $i<$thumbs; $i++){
+                    if(!unlink($path_to_dir.'/thb'.$i.'_'.$filename)){
                         return false;
                     }
                 }
