@@ -10,9 +10,27 @@ class ImageHelper extends AppHelper {
             $model = Inflector::tableize($this->model());
         }
 
-        $url = $this->Html->url('/files/'. $model .'/'. $file);
+        $path = 'files/'. $model .'/'.$file;
+        $url = $this->Html->url('/'.$path);
 
-        $dir = WWW_ROOT . 'files/'. $model .'/'. $file;
+        $dir = WWW_ROOT . $path;
+        $attrs = getimagesize($dir);
+        $width = $attrs[0];
+        $height = $attrs[1];
+
+        echo "<img src='$url' alt='user' widht='$width' height='$height' />"; 
+    }
+
+    function thumb($file, $model=null, $number=0){
+
+        if(!$model){
+            $model = Inflector::tableize($this->model());
+        }
+        
+        $path = 'files/'. $model .'/thb'.$number.'_'. $file;
+        $url = $this->Html->url('/'.$path);
+
+        $dir = WWW_ROOT . $path;
         $attrs = getimagesize($dir);
         $width = $attrs[0];
         $height = $attrs[1];
