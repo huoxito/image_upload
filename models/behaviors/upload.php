@@ -49,7 +49,7 @@ class UploadBehavior extends ModelBehavior {
     }
      
     function beforeSave(&$model){
-
+        
         App::Import('Lib', 'ImageUpload.Upload');
         foreach($this->fields_array as $field => $configs){
 
@@ -57,7 +57,8 @@ class UploadBehavior extends ModelBehavior {
                 
                 $handle = new upload($model->data[$model->alias][$field]);
                 
-                $filename = $this->nome($model);
+                $filename = $this->name($model, $field);
+
                 $handle->file_new_name_body = $filename; 
                 $handle->image_resize = true;
                 $handle->image_ratio_crop = true;
@@ -121,9 +122,9 @@ class UploadBehavior extends ModelBehavior {
         return $this->delete($model);
     }
 
-    function nome(&$model, $thumb = false){
-        $nome = time();
-        return $nome; 
+    function name(&$model, $field){
+        $name = $field.time();
+        return $name; 
     }
 
     function delete(&$model){
