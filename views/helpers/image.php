@@ -5,6 +5,10 @@ class ImageHelper extends AppHelper {
     var $helpers = array("Html");
 
     function show($file, $model=null){
+        
+        if(empty($file)){
+            return null;
+        }
 
         if(!$model){
             $model = Inflector::tableize($this->model());
@@ -23,6 +27,9 @@ class ImageHelper extends AppHelper {
 
     function thumb($file, $model=null, $number=0){
 
+        if(empty($file)){
+            return null;
+        }
         if(!$model){
             $model = Inflector::tableize($this->model());
         }
