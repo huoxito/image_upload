@@ -1,8 +1,75 @@
-Image Upload Plugin 
-===================
-
-Image Plugin for CakePHP. 
+Image Upload Plugin For CakePHP
+===============================
 
 One more option for dealing with image uploads in CakePHP in a simple way.
 
-Work in progress. Should be ready for production development soon enough.
+The plugin has a behavior that lets you easily upload and generate as many images as
+you need. It also comes with a helper class to make rendering theses images pretty 
+straighforward. The upload itself is processed using this class 
+http://www.verot.net/php_class_upload.htm
+
+To user the plugin's Behavior just pass an array with the field names and the image 
+width and height. For every image width and height passed one image will be generated.
+
+How to use
+----------
+
+Download or clone the plugin into your app/plugins directory.
+
+Heres the structure of the Upload behavior config that should be added on your model.
+The first two params are the main image width and height respectively. After that
+you can set as many thumb width and height as you need.
+
+    var $actsAs = array(
+        'ImageUpload.Upload' => array(
+             'field_name' => array('w','h','Tw','Th', 'Tw', 'Th' ...),
+             'field_name' => array('w','h','Tw','Th', 'Tw', 'Th' ...),
+                ...
+        )
+    );
+
+The following example would upload the image, crop it to 500 x 500 and generate 
+two thumbs, 100x50 and 30x50.
+
+    var $actsAs = array(
+        'ImageUpload.Upload' => array(
+             'profile' => array(
+                500,500, 100,50, 30,50
+             ),
+        )
+    );
+
+When a register is deleted all files related to that register are removed as well.
+To overwrite a file just upload a new image on an edit form for example.
+
+To use the Image helper just add it to the helpers var on the controller.
+
+    var $helpers = array('ImageUpload.Image');
+
+It comes with two methods so far one for uploading the main image and other for thumbs.
+In case you set any on the Behaviors config.
+
+To render the main image:
+    
+    <?= $this->Image->show($field_value, $controller); ?>
+
+Thumbs are enumerated. So it takes a $number parameter to render the exact thumb. To
+render the first thumb of the above example you should pass 0. 1 would render the second
+thumb and so on.
+
+    <?= $this->Image->thumb($field_value, $controller, $number); ?>
+
+
+Troubleshooting
+---------------
+
+The plugin doesn't show much helpful messages so far if any errors occurs on upload process
+so far. Below are two tips to avoid errors.
+
+Make sure to set write permissions to webroot/files/
+
+Don't forget to set you form correctly:
+    
+    <?php echo $this->Form->create('Model', array('type  => 'file')); ?>
+
+
