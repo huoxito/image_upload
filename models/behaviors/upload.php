@@ -1,15 +1,35 @@
 <?php 
 /*
  *  
- *  Example of a config array used on Model
- *  field_name should contain an array of the img width and 
+ *  Upload Behavior for CakePHP
+ *  
+ *  It uses the following class http://www.verot.net/php_class_upload.htm
+ *  for processing the upload itself. You might want to take a closer look
+ *  at the class if more customization is needed.
+ *
+ *  Example of a config array used on Model, field_name 
+ *  should contain an array of the img width and 
  *  height. Thumbs width and height are optional, if none is given
- *  no thumb will be generated.
+ *  no thumb will be generated. It is possible to attach as many image fields 
+ *  as you want.
  *
  *   var $actsAs = array(
  *       'ImageUpload.Upload' => array(
  *            'field_name' => array(
- *               'w','h','Tw','Th'
+ *               'w','h','Tw','Th', 'Tw', 'Th'
+ *            ),
+ *            'field_name' => array(
+ *               'w','h','Tw','Th', 'Tw', 'Th'
+ *            )
+ *       )
+ *   );
+ *  
+ *  The following example would upload the image and generate two thumbs.
+ *
+ *   var $actsAs = array(
+ *       'ImageUpload.Upload' => array(
+ *            'field_name' => array(
+ *               500,500, 100,50, 30,50
  *            )
  *       )
  *   );
@@ -27,7 +47,9 @@ class UploadBehavior extends ModelBehavior {
  * The dir name where pics get uploaded 
  */
     var $dir = null;
-     
+/*
+ *  Set dir name for the pics and the full path to it
+ */
     function setup(&$model, array $settings){
         
         $this->dir = Inflector::tableize($model->name);
@@ -38,7 +60,9 @@ class UploadBehavior extends ModelBehavior {
             $this->fields_array
         );
     }
-    
+/*
+ *  Overwrites the FILES array for a null value if no file is being uploaded
+ */
     function beforeValidate(&$model){
         foreach($this->fields_array as $field => $configs){
             if(empty($model->data[$model->alias][$field]['name'])){
@@ -47,7 +71,11 @@ class UploadBehavior extends ModelBehavior {
         }
         return true;
     }
-     
+/*
+ *  Process the upload. On edit forms if a new file is uploaded the old one is
+ *  removed.
+ *  Check number of params and generate thumbs if necessary.
+ */
     function beforeSave(&$model){
         
         App::Import('Lib', 'ImageUpload.Upload');
@@ -116,17 +144,23 @@ class UploadBehavior extends ModelBehavior {
 
         return true;
     }
-    
+/*
+ * Removes all files attached to row.
+ */
 
     function beforeDelete(&$model){
         return $this->delete($model);
     }
-
+/*
+ *  Generates name for main image.
+ */
     function name(&$model, $field){
         $name = $field.time();
         return $name; 
     }
-
+/*
+ *  Remove all files attached to row
+ */
     function delete(&$model){
         
         extract($this->settings[$model->alias]);
