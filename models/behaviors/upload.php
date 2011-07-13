@@ -107,7 +107,7 @@ class UploadBehavior extends ModelBehavior {
                 }
                 
                 if(!isset($model->data[$model->alias]['created'])){
-                    $this->delete($model);
+                    $this->delete($model, $field);
                 }
 
                 $params_number = count($this->settings[$model->alias][$field]);
@@ -159,19 +159,22 @@ class UploadBehavior extends ModelBehavior {
         return $name; 
     }
 /*
- *  Remove all files attached to row
+ *  Removes all files ralated to field_name or all files attached 
+ *  to row if no field_name is given.
  */
-    function delete(&$model){
+    function delete(&$model, $field_name=null){
         
         extract($this->settings[$model->alias]);
         foreach($this->fields_array as $field => $configs){
+            if($field_name && $field != $field_name){
+                continue;
+            }
             $filename = $model->field($field); 
-            if(!empty($filename)){
 
+            if(!empty($filename)){
                 if(!unlink($path_to_dir.'/'.$filename)){
                     return false;
                 }
-
                 $params_number = count($this->settings[$model->alias][$field]);
                 $thumbs = (int)($params_number - 2) / 2;
                 for($i=0; $i<$thumbs; $i++){
