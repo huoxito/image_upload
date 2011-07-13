@@ -18,6 +18,10 @@ class ImageHelper extends AppHelper {
         $url = $this->Html->url('/'.$path);
 
         $dir = WWW_ROOT . $path;
+        if(!is_file($dir)){
+            return "File not found";
+        }
+
         $attrs = getimagesize($dir);
         $width = $attrs[0];
         $height = $attrs[1];
@@ -38,6 +42,10 @@ class ImageHelper extends AppHelper {
         $url = $this->Html->url('/'.$path);
 
         $dir = WWW_ROOT . $path;
+        if(!is_file($dir)){
+            return "File not found";
+        }
+
         $attrs = getimagesize($dir);
         $width = $attrs[0];
         $height = $attrs[1];
