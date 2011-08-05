@@ -4,7 +4,7 @@ class ImageHelper extends AppHelper {
     
     var $helpers = array("Html");
 
-    function show($file, $model=null){
+    function show($file, $model=null, $options = array()){
         
         if(empty($file)){
             return null;
@@ -23,13 +23,14 @@ class ImageHelper extends AppHelper {
         }
 
         $attrs = getimagesize($dir);
-        $width = $attrs[0];
-        $height = $attrs[1];
+        $size = array('width' => $attrs[0], 'height' => $attrs[1]);
+        
+        $options = array_merge($size, $options);
 
-        echo "<img src='$url' alt='user' widht='$width' height='$height' />"; 
+        echo "<img src='$url' alt='user' widht='".$options['width']."' height='".$options['height']."' />"; 
     }
 
-    function thumb($file, $model=null, $number=0){
+    function thumb($file, $model=null, $number=0, $options = array()){
 
         if(empty($file)){
             return null;
@@ -47,10 +48,11 @@ class ImageHelper extends AppHelper {
         }
 
         $attrs = getimagesize($dir);
-        $width = $attrs[0];
-        $height = $attrs[1];
+        $size = array('width' => $attrs[0], 'height' => $attrs[1]);
+        
+        $options = array_merge($size, $options);
 
-        echo "<img src='$url' alt='user' widht='$width' height='$height' />"; 
+        echo "<img src='$url' alt='user' widht='".$options['width']."' height='".$options['height']."' />"; 
     }
 
 }
