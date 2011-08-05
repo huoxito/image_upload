@@ -61,6 +61,8 @@ class UploadBehavior extends ModelBehavior {
          
         $this->dir = Inflector::tableize($model->name);
         $this->fields_array = $settings['fields']; 
+        if(!isset($settings['configs']))
+            $settings['configs'] = array();
         $this->configs = array_merge($this->configs, $settings['configs']);
 
         $this->settings[$model->name] = array_merge(
