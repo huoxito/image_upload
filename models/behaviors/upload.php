@@ -38,7 +38,14 @@
  */
 
 class UploadBehavior extends ModelBehavior {
-
+/*
+ * Default settings. Crops image by default.
+ */
+    var $configs = array(
+        'image_resize' => true,
+        'image_ratio' => false,
+        'image_ratio_crop' => true
+    ); 
 /*
  * Default image dimensions 
  */
@@ -51,11 +58,13 @@ class UploadBehavior extends ModelBehavior {
  *  Set dir name for the pics and the full path to it
  */
     function setup(&$model, array $settings){
-        
+         
         $this->dir = Inflector::tableize($model->name);
-        $this->fields_array = $settings; 
+        $this->fields_array = $settings['fields']; 
+        $this->configs = array_merge($this->configs, $settings['configs']);
 
         $this->settings[$model->name] = array_merge(
+            $this->configs,
             array('path_to_dir' => WWW_ROOT . 'files/' . $this->dir),
             $this->fields_array
         );
@@ -88,8 +97,9 @@ class UploadBehavior extends ModelBehavior {
                 $filename = $this->name($model, $field);
 
                 $handle->file_new_name_body = $filename; 
-                $handle->image_resize = true;
-                $handle->image_ratio_crop = true;
+                $handle->image_resize = $this->settings[$model->alias]['image_resize'];
+                $handle->image_ratio = $this->settings[$model->alias]['image_ratio'];
+                $handle->image_ratio_crop = $this->settings[$model->alias]['image_ratio_crop'];
 
                 $image_width = $this->settings[$model->alias][$field][0];
                 $image_height = $this->settings[$model->alias][$field][1];
