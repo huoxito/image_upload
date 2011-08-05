@@ -127,8 +127,9 @@ class UploadBehavior extends ModelBehavior {
                     
                     $filename_thumb = 'thb'.$i.'_'.$filename;
                     $handle->file_new_name_body = $filename_thumb; 
-                    $handle->image_resize = true;
-                    $handle->image_ratio_crop = true;
+                    $handle->image_resize = $this->settings[$model->alias]['image_resize'];
+                    $handle->image_ratio = $this->settings[$model->alias]['image_ratio'];
+                    $handle->image_ratio_crop = $this->settings[$model->alias]['image_ratio_crop'];
 
                     $thumb_width = $this->settings[$model->alias][$field][2+$n];
                     $thumb_height = $this->settings[$model->alias][$field][3+$n];
