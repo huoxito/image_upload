@@ -13,33 +13,29 @@
  *  no thumb will be generated. It is possible to attach as many image fields 
  *  as you want.
  *
+ *  The following example would upload the image, resize it but not crop it 
+ *  and generate two thumbs.
+ *
  *   var $actsAs = array(
- *       'ImageUpload.Upload' => array(
- *            'field_name' => array(
- *               'w','h','Tw','Th', 'Tw', 'Th'
- *            ),
- *            'field_name' => array(
- *               'w','h','Tw','Th', 'Tw', 'Th'
- *            )
- *       )
+ *      'ImageUpload.Upload' => array(
+ *          'configs' => array(
+ *              'image_ratio' => true,
+ *              'image_ratio_crop' => false
+ *          ),
+ *          'fields' => array(
+ *              'field_name' => array(
+ *                  300, 300, 50, 50, 30, 30
+ *              )
+ *          )
+ *      ),
  *   );
  *  
- *  The following example would upload the image and generate two thumbs.
- *
- *   var $actsAs = array(
- *       'ImageUpload.Upload' => array(
- *            'field_name' => array(
- *               500,500, 100,50, 30,50
- *            )
- *       )
- *   );
- *
  *
  */
 
 class UploadBehavior extends ModelBehavior {
 /*
- * Default settings. Crops image by default.
+ * Default settings. Crops and resizes image by default.
  */
     var $configs = array(
         'image_resize' => true,
