@@ -181,15 +181,13 @@ class UploadBehavior extends ModelBehavior {
             $filename = $model->field($field); 
 
             if(!empty($filename)){
-                if(!unlink($path_to_dir.'/'.$filename)){
-                    return false;
-                }
+
+                @unlink($path_to_dir.'/'.$filename);
+
                 $params_number = count($this->settings[$model->alias][$field]);
                 $thumbs = (int)($params_number - 2) / 2;
                 for($i=0; $i<$thumbs; $i++){
-                    if(!unlink($path_to_dir.'/thb'.$i.'_'.$filename)){
-                        return false;
-                    }
+                    @unlink($path_to_dir.'/thb'.$i.'_'.$filename);
                 }
             }
         }
