@@ -27,7 +27,7 @@ class ImageHelper extends AppHelper {
         
         $options = array_merge($size, $options);
 
-        echo "<img src='$url' alt='user' widht='".$options['width']."' height='".$options['height']."' />"; 
+        return "<img src='$url' alt='user' widht='".$options['width']."' height='".$options['height']."' />"; 
     }
 
     function thumb($file, $model=null, $number=0, $options = array()){
@@ -52,7 +52,7 @@ class ImageHelper extends AppHelper {
         
         $options = array_merge($size, $options);
 
-        echo "<img src='$url' alt='user' widht='".$options['width']."' height='".$options['height']."' />"; 
+        return "<img src='$url' alt='user' widht='".$options['width']."' height='".$options['height']."' />"; 
     }
 
 }
