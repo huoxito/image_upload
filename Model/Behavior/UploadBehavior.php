@@ -110,8 +110,7 @@ class UploadBehavior extends ModelBehavior {
                 if($handle->processed){
                     $model->data[$model->alias][$field] = $filename.'.'.$handle->file_dst_name_ext;
                 }else{
-                    echo 'File could not be uploaded. '.$handle->error;
-                    exit;
+			        throw new NotFoundException('File could not be uploaded: ' . $handle->error);
                 }
                 
                 if(!isset($model->data[$model->alias]['created'])){
