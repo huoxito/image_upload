@@ -90,7 +90,7 @@ class UploadBehavior extends ModelBehavior {
 
             if(!empty($model->data[$model->alias][$field]['name'])){
                 
-                $handle = new upload($model->data[$model->alias][$field]);
+                $handle = new Upload($model->data[$model->alias][$field]);
                 
                 $filename = $this->name($model, $field);
 
