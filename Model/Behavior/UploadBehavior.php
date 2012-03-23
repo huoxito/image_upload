@@ -37,7 +37,7 @@ class UploadBehavior extends ModelBehavior {
 /*
  * Default settings. Crops and resizes image by default.
  */
-    var $configs = array(
+    public $configs = array(
         'image_resize' => true,
         'image_ratio' => false,
         'image_ratio_crop' => true
@@ -45,15 +45,15 @@ class UploadBehavior extends ModelBehavior {
 /*
  * Default image dimensions 
  */
-    var $param = 300;
+    public $param = 300;
 /*
  * The dir name where pics get uploaded 
  */
-    var $dir = null;
+    public $dir = null;
 /*
  *  Set dir name for the pics and the full path to it
  */
-    function setup(&$model, array $settings){
+    public function setup(&$model, array $settings){
          
         $this->dir = Inflector::tableize($model->name);
         $this->fields_array = $settings['fields']; 
@@ -70,7 +70,7 @@ class UploadBehavior extends ModelBehavior {
 /*
  *  Overwrites the FILES array for a null value if no file is being uploaded
  */
-    function beforeValidate(&$model){
+    public function beforeValidate(&$model){
         foreach($this->fields_array as $field => $configs){
             if(empty($model->data[$model->alias][$field]['name'])){
                 $model->data[$model->alias][$field] = null;
@@ -83,7 +83,7 @@ class UploadBehavior extends ModelBehavior {
  *  removed.
  *  Check number of params and generate thumbs if necessary.
  */
-    function beforeSave(&$model){
+    public function beforeSave(&$model){
         
         App::Import('Lib', 'ImageUpload.Upload');
         foreach($this->fields_array as $field => $configs){
@@ -156,13 +156,13 @@ class UploadBehavior extends ModelBehavior {
  * Removes all files attached to row.
  */
 
-    function beforeDelete(&$model){
+    public function beforeDelete(&$model){
         return $this->delete($model);
     }
 /*
  *  Generates name for main image.
  */
-    function name(&$model, $field){
+    public function name(&$model, $field){
         $name = $field.time();
         return $name; 
     }
@@ -170,7 +170,7 @@ class UploadBehavior extends ModelBehavior {
  *  Removes all files ralated to field_name or all files attached 
  *  to row if no field_name is given.
  */
-    function delete(&$model, $field_name=null){
+    public function delete(&$model, $field_name=null){
         
         extract($this->settings[$model->alias]);
         foreach($this->fields_array as $field => $configs){
@@ -198,7 +198,7 @@ class UploadBehavior extends ModelBehavior {
  * default config dimension. 
  *
  */ 
-    function checkIntParam($param){
+    public function checkIntParam($param){
         if(!is_numeric($param)){
             return $this->param;
         }
