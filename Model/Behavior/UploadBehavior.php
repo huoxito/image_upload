@@ -59,8 +59,8 @@ class UploadBehavior extends ModelBehavior {
  */
     public function setup(&$model, array $settings){
          
-        $this->dir = Inflector::tableize($model->name);
-        $this->fields_array = $settings['fields']; 
+        $this->dir = Inflector::tableize($model->alias);
+        $this->_fields[$model->alias] = $settings['fields']; 
         if(!isset($settings['configs']))
             $settings['configs'] = array();
         $this->configs = array_merge($this->configs, $settings['configs']);
@@ -68,7 +68,7 @@ class UploadBehavior extends ModelBehavior {
         $this->settings[$model->name] = array_merge(
             $this->configs,
             array('path_to_dir' => WWW_ROOT . 'files/' . $this->dir),
-            $this->fields_array
+            $this->_fields[$model->alias]
         );
     }
 
@@ -76,7 +76,7 @@ class UploadBehavior extends ModelBehavior {
  *  Overwrites the FILES array for a null value if no file is being uploaded
  */
     public function beforeValidate(&$model){
-        foreach($this->fields_array as $field => $configs){
+        foreach($this->_fields[$model->alias] as $field => $configs){
             if(empty($model->data[$model->alias][$field]['name'])){
                 $model->data[$model->alias][$field] = null;
             }
@@ -92,7 +92,7 @@ class UploadBehavior extends ModelBehavior {
     public function beforeSave(&$model){
         
         App::Import('Lib', 'ImageUpload.Upload');
-        foreach($this->fields_array as $field => $configs){
+        foreach($this->_fields[$model->alias] as $field => $configs){
 
             if(!empty($model->data[$model->alias][$field]['name'])){
                 
@@ -182,7 +182,7 @@ class UploadBehavior extends ModelBehavior {
     public function delete(&$model, $field_name=null){
         
         extract($this->settings[$model->alias]);
-        foreach($this->fields_array as $field => $configs){
+        foreach($this->_fields[$model->alias] as $field => $configs){
             if($field_name && $field != $field_name){
                 continue;
             }
