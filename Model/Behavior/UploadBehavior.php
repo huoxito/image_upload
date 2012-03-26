@@ -34,6 +34,7 @@
  */
 
 class UploadBehavior extends ModelBehavior {
+
 /*
  * Default settings. Crops and resizes image by default.
  */
@@ -42,14 +43,17 @@ class UploadBehavior extends ModelBehavior {
         'image_ratio' => false,
         'image_ratio_crop' => true
     ); 
+
 /*
  * Default image dimensions 
  */
     public $param = 300;
+
 /*
  * The dir name where pics get uploaded 
  */
     public $dir = null;
+
 /*
  *  Set dir name for the pics and the full path to it
  */
@@ -67,6 +71,7 @@ class UploadBehavior extends ModelBehavior {
             $this->fields_array
         );
     }
+
 /*
  *  Overwrites the FILES array for a null value if no file is being uploaded
  */
@@ -78,6 +83,7 @@ class UploadBehavior extends ModelBehavior {
         }
         return true;
     }
+
 /*
  *  Process the upload. On edit forms if a new file is uploaded the old one is
  *  removed.
@@ -152,6 +158,7 @@ class UploadBehavior extends ModelBehavior {
 
         return true;
     }
+
 /*
  * Removes all files attached to row.
  */
@@ -159,6 +166,7 @@ class UploadBehavior extends ModelBehavior {
     public function beforeDelete(&$model){
         return $this->delete($model);
     }
+
 /*
  *  Generates name for main image.
  */
@@ -166,6 +174,7 @@ class UploadBehavior extends ModelBehavior {
         $name = $field.time();
         return $name; 
     }
+
 /*
  *  Removes all files ralated to field_name or all files attached 
  *  to row if no field_name is given.
