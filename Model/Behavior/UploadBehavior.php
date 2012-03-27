@@ -168,10 +168,10 @@ class UploadBehavior extends ModelBehavior {
     }
 
 /*
- *  Generates name for main image.
+ * Generates name for main image.
  */
     public function name(&$model, $field){
-        $name = $field.time();
+        $name = str_shuffle($field . time() . rand()) . '_' . $field;
         return $name; 
     }
 
