@@ -2,9 +2,9 @@
 
 class ImageHelper extends AppHelper {
     
-    var $helpers = array("Html");
+    public $helpers = array("Html");
 
-    function show($file, $model=null, $options = array()){
+    public function show($file, $model=null, $options = array()){
         
         if(empty($file)){
             return null;
@@ -14,23 +14,19 @@ class ImageHelper extends AppHelper {
             $model = Inflector::tableize($this->model());
         }
 
-        $path = 'files/'. $model .'/'.$file;
-        $url = $this->Html->url('/'.$path);
+        $path = 'files/' . $model . '/' . $file;
+        $url = $this->Html->url('/' . $path);
 
         $dir = WWW_ROOT . $path;
         if(!is_file($dir)){
             return "File not found";
         }
 
-        $attrs = getimagesize($dir);
-        $size = array('width' => $attrs[0], 'height' => $attrs[1]);
-        
-        $options = array_merge($size, $options);
-
-        return "<img src='$url' alt='user' widht='".$options['width']."' height='".$options['height']."' />"; 
+        $options = $this->mergeOptions($dir, $options);
+        return $this->Html->image($url, $options);
     }
 
-    function thumb($file, $model=null, $number=0, $options = array()){
+    public function thumb($file, $model=null, $number=0, $options = array()){
 
         if(empty($file)){
             return null;
@@ -39,20 +35,25 @@ class ImageHelper extends AppHelper {
             $model = Inflector::tableize($this->model());
         }
         
-        $path = 'files/'. $model .'/thb'.$number.'_'. $file;
-        $url = $this->Html->url('/'.$path);
+        $path = 'files/' . $model . '/thb' . $number . '_' . $file;
+        $url = $this->Html->url('/' . $path);
 
         $dir = WWW_ROOT . $path;
         if(!is_file($dir)){
             return "File not found";
         }
 
-        $attrs = getimagesize($dir);
-        $size = array('width' => $attrs[0], 'height' => $attrs[1]);
-        
-        $options = array_merge($size, $options);
+        $options = $this->mergeOptions($dir, $options);
 
-        return "<img src='$url' alt='user' widht='".$options['width']."' height='".$options['height']."' />"; 
+        return $this->Html->image($url, $options);
+    }
+
+    private function mergeOptions($image, $options){
+
+        $attrs = getimagesize($image);
+        $size = array('width' => $attrs[0], 'height' => $attrs[1]);
+
+        return $options = array_merge($size, $options);
     }
 
 }
